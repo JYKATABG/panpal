@@ -1,7 +1,19 @@
 import express from 'express';
 import { NODE_ENV, PORT } from './config/env.js';
+import authRouter from './routes/auth.route.js';
+import cors from 'cors';
+import recipeRouter from './routes/recipe.route.js';
+import userRouter from './routes/user.route.js';
 
 const app = express();
+
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/recipes', recipeRouter);
+app.use('/api/v1/users', userRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
