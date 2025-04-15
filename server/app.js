@@ -1,9 +1,9 @@
 import express from 'express';
 import { NODE_ENV, PORT } from './config/env.js';
-import authRouter from './routes/auth.route.js';
+import authRouter from './routes/auth.routes.js';
 import cors from 'cors';
-import recipeRouter from './routes/recipe.route.js';
-import userRouter from './routes/user.route.js';
+import recipeRouter from './routes/recipe.routes.js';
+import userRouter from './routes/user.routes.js';
 import connectToDatabase from './database/db.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser'
