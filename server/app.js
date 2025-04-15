@@ -4,6 +4,7 @@ import authRouter from './routes/auth.route.js';
 import cors from 'cors';
 import recipeRouter from './routes/recipe.route.js';
 import userRouter from './routes/user.route.js';
+import connectToDatabase from './database/db.js';
 
 const app = express();
 
@@ -19,7 +20,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server is running in ${NODE_ENV} mode on port ${PORT}`);
 
+    await connectToDatabase();
 })
