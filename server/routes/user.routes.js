@@ -1,14 +1,16 @@
 import { Router } from "express";
+import { deleteUser, getAllUsers, getUserById, updateUser } from "../controllers/user.controller.js";
+import authorize from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
 
-userRouter.get("/", (req, res) => { res.send({ message: "Get all users" }) });
+userRouter.get("/", getAllUsers);
 
-userRouter.get("/:userId", (req, res) => { res.send({ message: "Get user details" }) });
+userRouter.get("/:userId", getUserById);
 
-userRouter.put("/:userId", (req, res) => { res.send({ message: "Update user" }) });
+userRouter.put("/:userId", authorize, updateUser);
 
-userRouter.put("/:userId/password", (req, res) => { res.send({ message: "Update user password" }) });
+userRouter.delete("/:userId", authorize, deleteUser);
 
 // Favourites
 
