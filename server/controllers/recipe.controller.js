@@ -119,3 +119,101 @@ export const deleteRecipe = async (req, res, next) => {
         next(error);
     }
 }
+
+// Comments
+
+export const addComment = async (req, res, next) => {
+    const { recipeId } = req.params;
+
+    const { text } = req.body;
+
+    try {
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe || recipe.length === 0) {
+            res.status(404).json({ success: false, message: "Recipe not found" });
+        }
+
+        if (!text?.trim()) {
+            return res.status(400).json({ success: false, message: "Please provide a comment" });
+        }
+
+        recipe.comments.push({
+            user: req.user._id,
+            text: req.body.text,
+        })
+        await recipe.save();
+
+        res.status(200).json({ success: true, message: "Comment added successfully", data: recipe });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const deleteComment = async (req, res, next) => {
+    const { recipeId, commentId } = req.params;
+
+    try {
+
+        const recipe = await Recipe.findById(recipeId);
+
+        if (!recipe || recipe.length === 0) {
+            return res.status(404).json({ success: false, message: "Recipe not found" });
+        }
+
+        const comment = recipe.comments.id(commentId);
+
+        if (!comment) {
+            return res.status(404).json({ success: false, message: "Comment not found" });
+        }
+
+        if (comment.user?.toString() !== req.user._id.toString()) {
+            return res.status(404).json({ success: false, message: "You can delete only your own comments" });
+        }
+
+
+        recipe.comments.pull(commentId);
+        await recipe.save();
+
+        res.status(200).json({ success: true, message: 'Comment deleted successfully' });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const likeComment = async (req, res, next) => {
+    const { recipeId, commentId } = req.params;
+    const userId = req.user._id
+
+    try {
+        const recipe = await Recipe.findById(recipeId);
+
+        if (!recipe || recipe.length === 0) {
+            return res.status(404).json({ success: false, message: "Recipe not found" });
+        }
+
+        const comment = recipe.comments.id(commentId);
+
+        if (!comment) {
+            return res.status(404).json({ success: false, message: "Comment not found" });
+        }
+
+        const hasLiked = comment.likes.includes(userId);
+        if (hasLiked) {
+            comment.likes.pull(userId);
+        } else {
+            comment.likes.push(userId);
+        }
+
+        await recipe.save();
+
+        res.status(200).json({
+            success: true,
+            message: hasLiked ? "Comment unliked successfully" : "Comment liked successfully",
+            likesCount: comment.likes.length
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}

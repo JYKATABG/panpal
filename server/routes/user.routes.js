@@ -20,12 +20,4 @@ userRouter.post("/favorites/:userId", (req, res) => { res.send({ message: "Add r
 
 userRouter.delete("/favorites/:userId", (req, res) => { res.send({ message: "Add recipe to favourites recipes" }) });
 
-// Comments
-
-userRouter.get("/all/comments", (req, res) => { res.send({ message: "Get all comments" }) });
-
-userRouter.get("/comments/:userId", (req, res) => { res.send({ message: "Get user comments" }) });
-
-userRouter.delete("/comments/:userId", (req, res) => { res.send({ message: "Delete own comment" }) });
-
 export default userRouter;
