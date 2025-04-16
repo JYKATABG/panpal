@@ -1,15 +1,18 @@
 import { Router } from "express";
+import { createRecipe, deleteRecipe, getAllRecipes, getRecipeById, updateRecipe } from "../controllers/recipe.controller.js";
+import authorize from "../middlewares/auth.middleware.js";
 
 const recipeRouter = Router();
 
-recipeRouter.get("/", (req, res) => { res.send({ message: "Get all recipes" }) })
+recipeRouter.get("/", getAllRecipes);
 
-recipeRouter.get("/:recipeId", (req, res) => { res.send({ message: "Get recipe details" }) })
+recipeRouter.get("/:recipeId", getRecipeById);
 
-recipeRouter.post("/", (req, res) => { res.send({ message: "Create recipe" }) })
+recipeRouter.post("/", authorize, createRecipe);
 
-recipeRouter.put("/:recipeId", (req, res) => { res.send({ message: "Update recipe" }) })
+recipeRouter.put("/:recipeId", authorize, updateRecipe);
 
-recipeRouter.delete("/:recipeId", (req, res) => { res.send({ message: "Delete recipe" }) })
+recipeRouter.delete("/:recipeId", authorize, deleteRecipe)
+
 
 export default recipeRouter;
