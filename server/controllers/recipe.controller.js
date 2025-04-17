@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Recipe from "../models/recipe.model.js";
+import User from "../models/user.model.js";
 
 export const getAllRecipes = async (req, res, next) => {
     try {
@@ -18,11 +19,9 @@ export const getAllRecipes = async (req, res, next) => {
 export const getRecipeById = async (req, res, next) => {
     const { recipeId } = req.params;
 
-    console.log(recipeId);
-
 
     if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-        return res.status(400).json({ success: false, message: "Invalid user ID format" });
+        return res.status(400).json({ success: false, message: "Invalid recipe ID format" });
     }
 
     const recipe = await Recipe.findById(recipeId);
@@ -41,8 +40,6 @@ export const getRecipeById = async (req, res, next) => {
 }
 
 export const createRecipe = async (req, res, next) => {
-
-    console.log(req.user._id);
 
 
     const {
@@ -83,7 +80,7 @@ export const updateRecipe = async (req, res, next) => {
     const { recipeId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-        return res.status(400).json({ success: false, message: "Invalid user ID format" });
+        return res.status(400).json({ success: false, message: "Invalid recipe ID format" });
     }
 
     try {
@@ -212,6 +209,52 @@ export const likeComment = async (req, res, next) => {
             message: hasLiked ? "Comment unliked successfully" : "Comment liked successfully",
             likesCount: comment.likes.length
         })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Favorites
+
+export const addToFavorites = async (req, res, next) => {
+    const { recipeId } = req.params;
+    const userId = req.user._id;
+
+    try {
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "Invalid user ID format" });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+            return res.status(400).json({ success: false, message: "Invalid recipe ID format" });
+        }
+
+        const recipe = await Recipe.findById(recipeId);
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        if (recipe.author.toString() === userId.toString()) {
+            return res.status(400).json({ success: false, message: "You cannot add your own recipe to favorites" });
+        }
+
+        const hasAddedToFavorites = user.favorites.includes(recipeId);
+        if (hasAddedToFavorites) {
+            user.favorites.pull(recipeId);
+        } else {
+            user.favorites.push(recipeId);
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: hasAddedToFavorites ? "Recipe removed" : "Recipe added to favorites"
+        });
 
     } catch (error) {
         next(error);

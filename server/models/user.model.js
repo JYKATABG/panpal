@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please add a password'],
         select: false
     },
-    favourites: [
+    favorites: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Recipe'

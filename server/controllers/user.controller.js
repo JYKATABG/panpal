@@ -1,7 +1,13 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 
 
 export const getAllUsers = async (req, res, next) => {
+
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ success: false, message: "You are not allowed to access this resource" });
+    }
+
     try {
         const users = await User.find();
 
@@ -30,6 +36,10 @@ export const getUserById = async (req, res, next) => {
         return res.status(400).json({ success: false, message: "Invalid user ID format" });
     }
 
+    if (userId.toString() !== req.user._id || req.user.role !== 'admin') {
+        return res.status(403).json({ success: false, message: "You are not allowed to access this resource" });
+    }
+
     try {
         const user = await User.findById(userId);
 
@@ -51,6 +61,10 @@ export const updateUser = async (req, res, next) => {
     }
 
     try {
+
+        if (userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: "You are not allowed to update this user" });
+        }
 
         const allowedUpdates = ['name', 'email'];
         const updates = Object.keys(req.body);
