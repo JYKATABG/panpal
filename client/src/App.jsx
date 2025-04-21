@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast"
 import { authStore } from "./stores/authStore"
 import { useEffect } from "react"
 import NotFound from "./pages/NotFound"
+import { RecipesCatalog } from "./pages/RecipesCatalog"
 
 const RedirectAuthenticatedUsers = ({ children }) => {
   const { isAuthenticated, user } = authStore();
@@ -42,6 +43,7 @@ function App() {
               <LoginPage />
             </RedirectAuthenticatedUsers>
           } />
+          <Route path="/recipes" element={<RecipesCatalog />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

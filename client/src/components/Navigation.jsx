@@ -33,7 +33,7 @@ const Navigation = () => {
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center space-x-6">
                     <Link to={"/"} className="hover:underline font-medium">Home</Link>
-                    <a href="#" className="hover:underline font-medium">Recipes</a>
+                    <Link to="/recipes" className="hover:underline font-medium">Recipes</Link>
                     <a href="#" className="hover:underline font-medium">Create</a>
                     <a href="#" className="hover:underline font-medium">Contact us</a>
                     <span className='px-2'>|</span>
