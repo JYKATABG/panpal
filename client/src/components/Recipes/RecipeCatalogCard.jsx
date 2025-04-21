@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion"
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { authStore } from "../../stores/authStore";
 
 export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
 
-    const [isAddedToFavourites, setIsAddedToFavorites] = useState(false);
+    const isAddedToFavourites = authStore((state) => !!state.user?.favorites?.includes(recipe._id));
+    const toggleFavorite = authStore((state) => state.toggleFavorite);
 
     const handleFavorite = async (e, recipeId, userId) => {
         e.stopPropagation();
@@ -23,11 +24,12 @@ export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
                 recipeId,
                 userId
             })
+
             if (response.status === 200) {
                 toast.success(response.data.message);
-                setIsAddedToFavorites(isAddedToFavourites => !isAddedToFavourites);
+                toggleFavorite(recipeId);
             } else {
-                toast.error("Failed to add recipe to favorites.");
+                toast.error(response.data.message || "Error adding recipe to favorites.");
             }
 
         } catch (error) {

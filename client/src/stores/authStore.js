@@ -5,7 +5,7 @@ const API_URL = "http://localhost:5500/api/v1/auth";
 
 axios.defaults.withCredentials = true;
 
-export const authStore = create((set) => ({
+export const authStore = create((set, get) => ({
     user: null,
     isAuthenticated: false,
     error: null,
@@ -51,5 +51,24 @@ export const authStore = create((set) => ({
             set({ user: null, error: null, isCheckingAuth: false });
 
         }
+    },
+    toggleFavorite: async (recipeId) => {
+        const { user } = get();
+        if (!user) return;
+
+        const isAlreadyFav = user.favorites.includes(recipeId);
+        const updatedFavorites = isAlreadyFav
+            ? user.favorites.filter((id) => id !== recipeId)
+            : [...user.favorites, recipeId];
+
+        set({ user: { ...user, favorites: updatedFavorites } });
+    },
+    isFavorite: (recipeId) => {
+        const { user } = get();
+        return user?.favorites?.includes(recipeId);
+    },
+}),
+    {
+        name: 'auth-store'
     }
-}))
+)
