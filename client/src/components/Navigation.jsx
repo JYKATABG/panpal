@@ -82,12 +82,14 @@ const Navigation = () => {
           <Link to={"/recipes"} className="block font-medium hover:underline">
             Recipes
           </Link>
-          <Link
-            to={"/create-recipe"}
-            className="block font-medium hover:underline"
-          >
-            Create
-          </Link>
+          {!isAuthenticated && (
+            <Link
+              to={"/create-recipe"}
+              className="block font-medium hover:underline"
+            >
+              Create
+            </Link>
+          )}
           <Link to={"#"} className="block font-medium hover:underline">
             Contact us
           </Link>
