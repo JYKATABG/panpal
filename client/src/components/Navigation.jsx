@@ -44,9 +44,9 @@ const Navigation = () => {
             </Link>
           )}
 
-          <a href="#" className="hover:underline font-medium">
+          <Link to={"/contact"} className="hover:underline font-medium">
             Contact us
-          </a>
+          </Link>
           <span className="px-2">|</span>
           {!isAuthenticated ? (
             <>
@@ -90,7 +90,7 @@ const Navigation = () => {
               Create
             </Link>
           )}
-          <Link to={"#"} className="block font-medium hover:underline">
+          <Link to={"/contact"} className="block font-medium hover:underline">
             Contact us
           </Link>
           <hr className="my-2" />

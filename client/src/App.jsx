@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import NotFound from "./pages/NotFound";
 import { RecipesCatalog } from "./pages/RecipesCatalog";
 import CreateRecipe from "./pages/CreateRecipe";
+import Contact from "./pages/Contact";
 
 const RedirectAuthenticatedUsers = ({ children }) => {
   const { isAuthenticated, user } = authStore();
@@ -53,6 +54,7 @@ function App() {
           />
           <Route path="/create-recipe" element={<CreateRecipe />} />
           <Route path="/recipes" element={<RecipesCatalog />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
