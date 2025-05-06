@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import { RecipesCatalog } from "./pages/RecipesCatalog";
 import CreateRecipe from "./pages/CreateRecipe";
 import Contact from "./pages/Contact";
+import RecipeDetails from "./pages/RecipeDetails";
 
 const RedirectAuthenticatedUsers = ({ children }) => {
   const { isAuthenticated, user } = authStore();
@@ -53,6 +54,7 @@ function App() {
             }
           />
           <Route path="/create-recipe" element={<CreateRecipe />} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
           <Route path="/recipes" element={<RecipesCatalog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

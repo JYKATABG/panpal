@@ -27,7 +27,10 @@ export const getRecipeById = async (req, res, next) => {
       .json({ success: false, message: "Invalid recipe ID format" });
   }
 
-  const recipe = await Recipe.findById(recipeId);
+  const recipe = await Recipe.findById(recipeId).populate({
+    path: "comments.user",
+    select: "name email"
+  });
 
   if (!recipe || recipe.length === 0) {
     res.status(404).json({ success: false, message: "Recipe not found" });
@@ -127,27 +130,50 @@ export const addComment = async (req, res, next) => {
   const { text } = req.body;
 
   try {
-    const recipe = await Recipe.findById(recipeId);
-    if (!recipe || recipe.length === 0) {
-      res.status(404).json({ success: false, message: "Recipe not found" });
-    }
-
     if (!text?.trim()) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Please provide a comment" });
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a comment",
+      });
     }
 
-    recipe.comments.push({
-      user: req.user._id,
-      text: req.body.text,
-    });
-    await recipe.save();
+    // Check for valid recipe ID
+    if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid recipe ID",
+      });
+    }
+
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      recipeId,
+      {
+        $push: {
+          comments: {
+            user: req.user._id,
+            text,
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).populate("comments.user", "name email");
+
+    if (!updatedRecipe) {
+      return res.status(404).json({
+        success: false,
+        message: "Recipe not found",
+      });
+    }
+
+    const lastComment = updatedRecipe.comments.at(-1);
 
     res.status(200).json({
       success: true,
       message: "Comment added successfully",
-      data: recipe,
+      data: lastComment,
     });
   } catch (error) {
     next(error);
@@ -160,7 +186,7 @@ export const deleteComment = async (req, res, next) => {
   try {
     const recipe = await Recipe.findById(recipeId);
 
-    if (!recipe || recipe.length === 0) {
+    if (!recipe) {
       return res
         .status(404)
         .json({ success: false, message: "Recipe not found" });
@@ -182,7 +208,7 @@ export const deleteComment = async (req, res, next) => {
     }
 
     recipe.comments.pull(commentId);
-    await recipe.save();
+    await recipe.save({ validateModifiedOnly: true });
 
     res
       .status(200)
@@ -227,7 +253,9 @@ export const likeComment = async (req, res, next) => {
       message: hasLiked
         ? "Comment unliked successfully"
         : "Comment liked successfully",
-      likesCount: comment.likes.length,
+      data: {
+        likes: comment.likes
+      },
     });
   } catch (error) {
     next(error);
