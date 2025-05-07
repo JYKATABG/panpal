@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
+import Recipe from "../models/recipe.model.js";
 
 
 export const getAllUsers = async (req, res, next) => {
@@ -48,6 +49,17 @@ export const getUserById = async (req, res, next) => {
         }
 
         res.status(200).json({ success: true, message: "User fetched successfully", data: user })
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getUserRecipes = async (req, res, next) => {
+    try {
+        const recipes = await Recipe.find({ author: req.user._id });
+
+        res.status(200).json({ success: true, count: recipes.length, data: recipes })
+
     } catch (error) {
         next(error);
     }
