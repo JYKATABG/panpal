@@ -12,11 +12,15 @@ export default function ProfilePage() {
   const { user } = authStore();
   const navigate = useNavigate();
 
-  if (!user) {
-    toast.error("You don't have permission to access this page!");
-    navigate("/");
-    return;
-  }
+  const [hasRedirected, setHasRedirected] = useState(false);
+
+  useEffect(() => {
+    if (!user && !hasRedirected) {
+      toast.error("You don't have permission to access this page!");
+      navigate("/");
+      setHasRedirected(true);
+    }
+  }, [user, hasRedirected, navigate]);
 
   useEffect(() => {
     let isMounted = true;
@@ -87,7 +91,6 @@ export default function ProfilePage() {
               >
                 Create Recipe
               </Link>
-              ;
             </motion.div>
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
