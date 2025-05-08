@@ -32,6 +32,8 @@ export const getRecipeById = async (req, res, next) => {
     select: "name email"
   });
 
+  await recipe.populate("author", "name email image");
+
   if (!recipe || recipe.length === 0) {
     res.status(404).json({ success: false, message: "Recipe not found" });
   }

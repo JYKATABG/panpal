@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -18,14 +18,16 @@ export const CreateRecipe = () => {
   });
   const { isAuthenticated, user } = authStore();
 
-  let response;
-
   const navigate = useNavigate();
 
-  if (!isAuthenticated && !user) {
-    toast.error("You don't have access to this page!");
-    navigate("/");
-  }
+  useEffect(() => {
+    if (!user && !isAuthenticated) {
+      toast.error("You don't have access to this page!");
+      navigate("/");
+    }
+  }, [user])
+
+  let response;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +56,7 @@ export const CreateRecipe = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    debugger
     try {
       response = await axios.post("http://localhost:5500/api/v1/recipes", form);
       navigate("/recipes");
@@ -194,7 +197,7 @@ export const CreateRecipe = () => {
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="Easy">Easy</option>
+          <option defaultChecked value="Easy">Easy</option>
           <option value="Medium">Medium</option>
           <option value="Hard">Hard</option>
         </select>

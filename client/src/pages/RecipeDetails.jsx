@@ -9,6 +9,7 @@ import { authStore } from "../stores/authStore";
 const RecipeDetails = () => {
     const { recipeId } = useParams();
     const [recipeData, setRecipeData] = useState(null);
+    const [authorData, setAuthorData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -32,6 +33,9 @@ const RecipeDetails = () => {
         };
         fetchRecipe();
     }, [recipeId]);
+
+    console.log(recipeData);
+    
 
     const handleCreateComment = async (e) => {
         e.preventDefault();
