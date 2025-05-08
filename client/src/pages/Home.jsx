@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { RecipeCardsContainer } from "../components/Recipes/RecipeCardsContainer"
 import { motion } from "framer-motion"
 export const HomePage = () => {
@@ -21,20 +22,22 @@ export const HomePage = () => {
                         Create your own, comment on others, drop a like, and get inspired daily!
                     </p>
                     <div className="flex gap-4 flex-wrap">
-                        <motion.a
-                            href="#recipes"
-                            whileHover={{ scale: 1.05 }}
-                            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-md transition"
-                        >
-                            Start Sharing Recipes
-                        </motion.a>
-                        <motion.a
-                            href="#create"
-                            whileHover={{ scale: 1.05 }}
-                            className="border-2 border-pink-500 text-pink-500 px-6 py-3 rounded-full hover:bg-pink-50 transition"
-                        >
-                            Explore Community
-                        </motion.a>
+                        <Link to={"/recipes"} className="mt-4">
+                            <motion.a
+                                whileHover={{ scale: 1.05 }}
+                                className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-md transition"
+                            >
+                                Start Sharing Recipes
+                            </motion.a>
+                        </Link>
+                        <Link to={"/create-recipe"} className="mt-4">
+                            <motion.a
+                                whileHover={{ scale: 1.05 }}
+                                className="border-2 border-pink-500 text-pink-500 px-6 py-3 rounded-full hover:bg-pink-50 transition"
+                            >
+                                Explore Community
+                            </motion.a>
+                        </Link>
                     </div>
                 </motion.div>
 
