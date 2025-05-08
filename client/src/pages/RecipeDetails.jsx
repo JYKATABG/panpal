@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { ThumbsUp, Trash2 } from "lucide-react";
+import { Mail, ThumbsUp, Trash2 } from "lucide-react";
 import { authStore } from "../stores/authStore";
 
 const RecipeDetails = () => {
@@ -23,6 +23,7 @@ const RecipeDetails = () => {
             try {
                 const response = await axios.get(`http://localhost:5500/api/v1/recipes/${recipeId}`);
                 setRecipeData(response.data.data);
+                setAuthorData(response.data.data.author);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching recipe: ", error);
@@ -34,8 +35,6 @@ const RecipeDetails = () => {
         fetchRecipe();
     }, [recipeId]);
 
-    console.log(recipeData);
-    
 
     const handleCreateComment = async (e) => {
         e.preventDefault();
@@ -131,6 +130,34 @@ const RecipeDetails = () => {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-3xl overflow-hidden"
             >
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="flex items-center gap-4 p-4 bg-indigo-50 rounded-xl shadow-sm"
+                >
+                    {/* Avatar */}
+                    <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
+                        <img
+                            src={`https://api.dicebear.com/5.x/initials/svg?seed=${authorData?.name}`}
+                            alt={authorData?.name}
+                            className="object-cover w-full h-full"
+                        />
+                    </div>
+
+                    {/* Info */}
+                    <div>
+                        <p className="text-base font-semibold text-gray-800">
+                            {authorData?.name}
+                        </p>
+                        {authorData?.email && (
+                            <p className="text-sm text-gray-500 flex items-center gap-1">
+                                <Mail className="w-4 h-4" />
+                                {authorData?.email}
+                            </p>
+                        )}
+                    </div>
+                </motion.div>
                 {/* Image Section */}
                 <div
                     className="w-full h-64 md:h-96 bg-cover bg-center"
