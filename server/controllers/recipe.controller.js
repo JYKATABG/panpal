@@ -29,7 +29,7 @@ export const getRecipeById = async (req, res, next) => {
 
   const recipe = await Recipe.findById(recipeId).populate({
     path: "comments.user",
-    select: "name email"
+    select: "name email",
   });
 
   await recipe.populate("author", "name email image");
@@ -108,13 +108,22 @@ export const deleteRecipe = async (req, res, next) => {
   }
 
   try {
-    const recipe = await Recipe.findByIdAndDelete(recipeId);
+    const recipe = await Recipe.findById(recipeId);
 
     if (!recipe || recipe.length === 0) {
       return res
         .status(404)
         .json({ success: false, message: "Recipe not found" });
     }
+
+    if (req.user._id !== recipe.author._id) {
+      return res.status(404).json({
+        success: false,
+        message: "Access denied! You are not allowed to delete this recipe!",
+      });
+    }
+
+    await recipe.deleteOne();
 
     res
       .status(200)
@@ -123,8 +132,6 @@ export const deleteRecipe = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 // Comments
 
@@ -258,7 +265,7 @@ export const likeComment = async (req, res, next) => {
         ? "Comment unliked successfully"
         : "Comment liked successfully",
       data: {
-        likes: comment.likes
+        likes: comment.likes,
       },
     });
   } catch (error) {
