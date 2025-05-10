@@ -13,7 +13,7 @@ export const CreateRecipe = () => {
     steps: [""],
     image: "",
     tags: [""],
-    difficulty: "",
+    difficulty: "Easy",
     cookTime: 0,
   });
   const { isAuthenticated, user } = authStore();
@@ -25,7 +25,7 @@ export const CreateRecipe = () => {
       toast.error("You don't have access to this page!");
       navigate("/");
     }
-  }, [user])
+  }, [user]);
 
   let response;
 
@@ -56,7 +56,6 @@ export const CreateRecipe = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    debugger
     try {
       response = await axios.post("http://localhost:5500/api/v1/recipes", form);
       navigate("/recipes");
@@ -197,7 +196,9 @@ export const CreateRecipe = () => {
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option defaultChecked value="Easy">Easy</option>
+          <option defaultChecked={true} value="Easy">
+            Easy
+          </option>
           <option value="Medium">Medium</option>
           <option value="Hard">Hard</option>
         </select>
