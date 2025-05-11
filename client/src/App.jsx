@@ -15,6 +15,8 @@ import CreateRecipe from "./pages/CreateRecipe";
 import Contact from "./pages/Contact";
 import RecipeDetails from "./pages/RecipeDetails";
 import ProfilePage from "./pages/Profile";
+import EditRecipe from "./pages/EditRecipe";
+import Loading from "./components/Loading";
 
 const RedirectAuthenticatedUsers = ({ children }) => {
   const { isAuthenticated, user } = authStore();
@@ -26,11 +28,15 @@ const RedirectAuthenticatedUsers = ({ children }) => {
 };
 
 function App() {
-  const { checkAuth } = authStore();
+  const { checkAuth, isCheckingAuth } = authStore();
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
+
+  if (isCheckingAuth) {
+    return <Loading />
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -59,6 +65,7 @@ function App() {
           <Route path="/recipes" element={<RecipesCatalog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/recipes/:recipeId/edit" element={<EditRecipe />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
