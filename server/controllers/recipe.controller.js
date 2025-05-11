@@ -80,6 +80,7 @@ export const updateRecipe = async (req, res, next) => {
   try {
     const recipe = await Recipe.findByIdAndUpdate(recipeId, req.body, {
       new: true,
+      runValidators: true
     });
 
     if (!recipe || recipe.length === 0) {
@@ -93,8 +94,16 @@ export const updateRecipe = async (req, res, next) => {
       message: "Recipe updated successfully",
       data: recipe,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const fieldErrors = {};
+      Object.keys(err.errors).forEach((field) => {
+        fieldErrors[field] = err.errors[field].message;
+      });
+
+      return res.status(400).json({ errors: fieldErrors });
+    }
+    next(err);
   }
 };
 

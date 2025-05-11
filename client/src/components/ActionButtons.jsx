@@ -3,16 +3,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ActionButtons({ recipeId }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const navigate = useNavigate();
-
-  const onEdit = () => {
-    console.log("edit button");
-  };
 
   const onDelete = async () => {
     try {
@@ -31,15 +27,16 @@ export default function ActionButtons({ recipeId }) {
     <>
       <div className="flex gap-4">
         {/* Edit Button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onEdit}
-          className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-xl shadow hover:bg-blue-200 transition"
-        >
-          <Pencil className="w-4 h-4" />
-          Edit
-        </motion.button>
+        <Link to={`/recipes/${recipeId}/edit`}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-xl shadow hover:bg-blue-200 transition"
+          >
+            <Pencil className="w-4 h-4" />
+            Edit
+          </motion.button>
+        </Link>
 
         {/* Delete Button */}
         <motion.button
