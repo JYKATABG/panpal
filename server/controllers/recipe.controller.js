@@ -116,7 +116,7 @@ export const deleteRecipe = async (req, res, next) => {
         .json({ success: false, message: "Recipe not found" });
     }
 
-    if (req.user._id !== recipe.author._id) {
+    if (req.user._id.toString() !== recipe.author._id.toString()) {
       return res.status(404).json({
         success: false,
         message: "Access denied! You are not allowed to delete this recipe!",
