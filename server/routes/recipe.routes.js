@@ -1,5 +1,15 @@
 import { Router } from "express";
-import { addComment, addToFavorites, createRecipe, deleteComment, deleteRecipe, getAllRecipes, getRecipeById, likeComment, updateRecipe } from "../controllers/recipe.controller.js";
+import {
+  addComment,
+  addToFavorites,
+  createRecipe,
+  deleteComment,
+  deleteRecipe,
+  getAllRecipes,
+  getRecipeById,
+  likeComment,
+  updateRecipe,
+} from "../controllers/recipe.controller.js";
 import authorize from "../middlewares/auth.middleware.js";
 
 const recipeRouter = Router();
@@ -12,13 +22,17 @@ recipeRouter.post("/", authorize, createRecipe);
 
 recipeRouter.put("/:recipeId", authorize, updateRecipe);
 
-recipeRouter.delete("/:recipeId", authorize, deleteRecipe)
+recipeRouter.delete("/:recipeId", authorize, deleteRecipe);
 
 // Comments
 
 recipeRouter.post("/:recipeId/comments", authorize, addComment);
 
-recipeRouter.post("/:recipeId/comments/:commentId/like", authorize, likeComment);
+recipeRouter.post(
+  "/:recipeId/comments/:commentId/like",
+  authorize,
+  likeComment
+);
 
 recipeRouter.delete("/:recipeId/comments/:commentId", authorize, deleteComment);
 

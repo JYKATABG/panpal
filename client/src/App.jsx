@@ -17,6 +17,7 @@ import RecipeDetails from "./pages/RecipeDetails";
 import ProfilePage from "./pages/Profile";
 import EditRecipe from "./pages/EditRecipe";
 import Loading from "./components/Loading";
+import FavouriteRecipes from "./pages/FavouriteRecipes";
 
 const RedirectAuthenticatedUsers = ({ children }) => {
   const { isAuthenticated, user } = authStore();
@@ -35,7 +36,7 @@ function App() {
   }, [checkAuth]);
 
   if (isCheckingAuth) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -66,6 +67,10 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/recipes/:recipeId/edit" element={<EditRecipe />} />
+          <Route
+            path="/profile/:userId/favourites"
+            element={<FavouriteRecipes />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
