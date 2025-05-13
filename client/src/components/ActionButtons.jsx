@@ -25,7 +25,7 @@ export default function ActionButtons({ recipeId }) {
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-4">
         {/* Edit Button */}
         <Link to={`/recipes/${recipeId}/edit`}>
           <motion.button
@@ -34,7 +34,6 @@ export default function ActionButtons({ recipeId }) {
             className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-xl shadow hover:bg-blue-200 transition"
           >
             <Pencil className="w-4 h-4" />
-            Edit
           </motion.button>
         </Link>
 
@@ -43,10 +42,9 @@ export default function ActionButtons({ recipeId }) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowDeleteModal(true)}
-          className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-red-100 text-red-700 font-medium rounded-xl shadow hover:bg-red-200 transition"
+          className="flex cursor-pointer items-center gap-2 py-2 px-4 bg-red-100 text-red-700 font-medium rounded-xl shadow hover:bg-red-200 transition"
         >
           <Trash2 className="w-4 h-4" />
-          Delete
         </motion.button>
 
         {showDeleteModal && (
