@@ -1,7 +1,7 @@
 import { authStore } from "../stores/authStore";
 import { useState } from "react";
-import { Menu, User2, X } from "lucide-react"; // Optional: you can replace these with SVGs if you want
-import logo from "../assets/logo.png"; // Update with your logo path
+import { Menu, X } from "lucide-react";
+import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import UserDropdown from "./UserDropDown";
 import toast from "react-hot-toast";
@@ -23,10 +23,9 @@ const Navigation = () => {
 
   return (
     <header className="bg-white/70 backdrop-blur-sm shadow-lg p-2 fixed top-0 w-full z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl mx-30 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-4">
-          <img src={logo} alt="Panpal Logo" className="w-12 h-12" />
           <h1 className="text-3xl font-bold">Panpal</h1>
         </div>
 
