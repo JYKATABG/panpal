@@ -117,7 +117,7 @@ export default function EditRecipe() {
       onSubmit={handleSubmit}
       className="max-w-4xl mx-auto my-16 md:my-20 lg:my-24 bg-white p-8 rounded-2xl shadow-lg space-y-6 mt-20"
     >
-      <h2 className="text-3xl font-bold text-gray-800">Create a Recipe</h2>
+      <h2 className="text-3xl font-bold text-gray-800">Edit: {form.title}</h2>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">Title</label>
@@ -253,7 +253,7 @@ export default function EditRecipe() {
           Edit Recipe
         </button>
         <Link
-          to={"/recipes"}
+          to={`/recipes/${recipeId}`}
           className="w-full text-center bg-red-600 cursor-pointer text-white py-3 rounded-md hover:bg-red-700 transition"
         >
           Cancel

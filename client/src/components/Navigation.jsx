@@ -23,7 +23,7 @@ const Navigation = () => {
 
   return (
     <header className="bg-white/70 backdrop-blur-sm shadow-lg p-2 fixed top-0 w-full z-50">
-      <div className="max-w-7xl lg:mx-15 mx-5 flex items-center justify-between">
+      <div className="mx-5 md:mx-15 lg:mx-20 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-4">
           <h1 className="text-3xl font-bold">Panpal</h1>
