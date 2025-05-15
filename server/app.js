@@ -14,8 +14,7 @@ import { fileURLToPath } from "url";
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
-  "https://panpal-production.up.railway.app",
-  "https://calm-analysis-production.up.railway.app",
+  "https://panpal-lh0b.onrender.com"
 ];
 
 const app = express();
