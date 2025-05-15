@@ -18,9 +18,7 @@ export const RecipesCatalog = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get(`${API}/api/v1/recipes`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(`${API}/api/v1/recipes`);
         setRecipes(response.data.data);
       } catch (error) {
         console.error("Error fetching recipes:", error);

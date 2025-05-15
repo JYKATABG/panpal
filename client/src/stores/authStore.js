@@ -22,7 +22,7 @@ export const authStore = create(
                         name,
                         email,
                         password,
-                    });
+                    }, { withCredentials: true });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -36,7 +36,10 @@ export const authStore = create(
             login: async (email, password) => {
                 set({ isLoading: true, error: null });
                 try {
-                    const response = await axios.post(`${API_URL}/login`, { email, password });
+                    const response = await axios.post(`${API_URL}/login`, { email, password }, {
+                        withCredentials
+                            : true
+                    });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -50,7 +53,7 @@ export const authStore = create(
             logout: async () => {
                 set({ error: null });
                 try {
-                    await axios.post(`${API_URL}/logout`);
+                    await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
                     set({ user: null, isAuthenticated: false });
                 } catch (error) {
                     set({
