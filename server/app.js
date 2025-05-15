@@ -52,7 +52,7 @@ app.get("/{*any}", (req, res) => {
 
 app.use(errorMiddleware);
 
-app.listen(PORT, async () => {
+app.listen(process.env.PORT || 5500, async () => {
   console.log(`Server is running in ${NODE_ENV} mode on port ${PORT}`);
 
   await connectToDatabase();
