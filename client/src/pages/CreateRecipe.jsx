@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../stores/authStore";
 
+const API = import.meta.env.VITE_API_URL;
+
 export const CreateRecipe = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [form, setForm] = useState({
@@ -57,7 +59,9 @@ export const CreateRecipe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      response = await axios.post("http://localhost:5500/api/v1/recipes", form);
+      response = await axios.post(`${API}/api/v1/recipes`, form, {
+        withCredentials: true,
+      });
       navigate("/recipes");
       toast.success(response.data.message);
     } catch (err) {

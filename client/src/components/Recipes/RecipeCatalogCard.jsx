@@ -5,6 +5,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { authStore } from "../../stores/authStore";
 
+const API = import.meta.env.VITE_API_URL;
+
 export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
   const favorites = authStore((state) => state?.user?.favorites || []);
   const isAddedToFavourites = favorites.includes(recipe._id);
@@ -21,7 +23,7 @@ export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5500/api/v1/recipes/${recipeId}/favorites`,
+        `${API}/api/v1/recipes/${recipeId}/favorites`,
         {
           recipeId,
           userId,

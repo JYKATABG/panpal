@@ -7,6 +7,8 @@ import { Star } from "lucide-react";
 import Loading from "../components/Loading";
 import { fetchFavouriteRecipes } from "../api/fetchFavouriteRecipes";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function FavouriteRecipes() {
   const { user, isAuthenticated, isCheckingAuth } = authStore();
   const [favourites, setFavourites] = useState([]);
@@ -22,7 +24,7 @@ export default function FavouriteRecipes() {
         setFavourites(recipeId);
       });
 
-      axios.get(`http://localhost:5500/api/v1/users/${userId}/favourites`);
+      axios.get(`${API}/api/v1/users/${userId}/favourites`);
     } else {
       toast.error("Access denied! Can't access this page");
       navigate("/");
@@ -40,7 +42,7 @@ export default function FavouriteRecipes() {
 
     try {
       const response = await axios.post(
-        `http://localhost:5500/api/v1/recipes/${recipeId}/favorites`
+        `${API}/api/v1/recipes/${recipeId}/favorites`
       );
 
       if (

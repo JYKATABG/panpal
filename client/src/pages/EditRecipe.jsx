@@ -5,6 +5,8 @@ import { authStore } from "../stores/authStore";
 import Loading from "../components/Loading";
 import toast from "react-hot-toast";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function EditRecipe() {
   const [authorId, setAuthorId] = useState(null);
   const { user, isAuthenticated, isCheckingAuth } = authStore();
@@ -30,9 +32,9 @@ export default function EditRecipe() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/api/v1/recipes/${recipeId}`
-        );
+        const response = await axios.get(`${API}/api/v1/recipes/${recipeId}`, {
+          withCredentials: true,
+        });
         const recipe = response.data.data;
 
         setAuthorId(recipe?.author._id);
@@ -93,7 +95,7 @@ export default function EditRecipe() {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:5500/api/v1/recipes/${recipeId}`,
+        `${API}/api/v1/recipes/${recipeId}`,
         form
       );
       navigate(`/recipes/${recipeId}`);

@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Utensils } from "lucide-react";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function ProfilePage() {
   const [recipes, setRecipes] = useState([]);
 
@@ -27,9 +29,9 @@ export default function ProfilePage() {
 
     (async () => {
       try {
-        const { data } = await axios.get(
-          `http://localhost:5500/api/v1/users/me/recipes`
-        );
+        const { data } = await axios.get(`${API}/api/v1/users/me/recipes`, {
+          withCredentials: true,
+        });
         if (!isMounted) setRecipes(data.data);
       } catch (error) {
         console.error("Error fetching user recipes:", error);

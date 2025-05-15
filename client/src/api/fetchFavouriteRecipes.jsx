@@ -1,10 +1,12 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const API = import.meta.env.VITE_API_URL;
+
 export const fetchFavouriteRecipes = async (userId) => {
   try {
     const response = await axios.get(
-      `http://localhost:5500/api/v1/users/${userId}/favourites`,
+      `${API}/api/v1/users/${userId}/favourites`,
       { withCredentials: true }
     );
 

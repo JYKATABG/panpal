@@ -5,6 +5,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function ActionButtons({ recipeId }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -12,7 +14,7 @@ export default function ActionButtons({ recipeId }) {
 
   const onDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5500/api/v1/recipes/${recipeId}`);
+      await axios.delete(`${API}/api/v1/recipes/${recipeId}`);
       toast.success("Recipe deleted successfully!");
       navigate("/recipes");
     } catch (error) {
