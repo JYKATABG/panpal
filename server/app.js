@@ -11,12 +11,30 @@ import arjcetMiddleware from "./middlewares/arcjet.middleware.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "https://calm-analysis-production.up.railway.app",
+];
+
 const app = express();
 const __dirname = path.resolve();
 const __filename = fileURLToPath(import.meta.url);
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(arjcetMiddleware);
