@@ -29,13 +29,15 @@ const RedirectAuthenticatedUsers = ({ children }) => {
 };
 
 function App() {
-  const { checkAuth, isCheckingAuth } = authStore();
+  const { checkAuth, isCheckingAuth, hasHydrated } = authStore();
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (hasHydrated) {
+      checkAuth();
+    }
+  }, [hasHydrated, checkAuth]);
 
-  if (isCheckingAuth) {
+  if (isCheckingAuth || !hasHydrated) {
     return <Loading />;
   }
 

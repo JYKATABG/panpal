@@ -10,6 +10,8 @@ export const authStore = create(
     persist(
         (set, get) => ({
             user: null,
+            hasHydrated: false,
+            setHasHydrated: (value) => set({ hasHydrated: value }),
             isAuthenticated: false,
             error: null,
             isLoading: false,
@@ -104,6 +106,9 @@ export const authStore = create(
                 user: state.user,
                 isAuthenticated: state.isAuthenticated,
             }),
+            onRehydrateStorage: () => (state) => {
+                state?.setHasHydrated(true);
+            }
         }
     )
 );
