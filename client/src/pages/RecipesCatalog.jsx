@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { authStore } from "../stores/authStore";
 import RecipeCatalogCard from "../components/Recipes/RecipeCatalogCard";
+import Loading from "../components/Loading";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -12,7 +13,7 @@ export const RecipesCatalog = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
-  const { isAuthenticated } = authStore();
+  const { isAuthenticated, isCheckingAuth } = authStore();
   const recipesPerPage = 6;
 
   useEffect(() => {
@@ -35,6 +36,8 @@ export const RecipesCatalog = () => {
 
     return () => clearTimeout(handler);
   }, [searchTerm]);
+
+  if (!isCheckingAuth) return <Loading />
 
   const filteredData = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(debouncedSearch)

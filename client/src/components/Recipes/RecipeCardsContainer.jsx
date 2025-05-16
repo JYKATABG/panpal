@@ -54,8 +54,8 @@ export const RecipeCardsContainer = () => {
           .reverse()
           .slice(0, 5)
           .map((recipe) => (
-            <SwiperSlide key={recipe._id}>
-              <Link to={`/recipes/${recipe._id}`}>
+            <SwiperSlide key={recipe?._id}>
+              <Link to={`/recipes/${recipe?._id}`}>
                 <RecipeCard recipe={recipe} />
               </Link>
             </SwiperSlide>

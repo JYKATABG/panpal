@@ -9,7 +9,7 @@ const API = import.meta.env.VITE_API_URL;
 
 export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
   const favorites = authStore((state) => state?.user?.favorites || []);
-  const isAddedToFavourites = favorites.includes(recipe._id);
+  const isAddedToFavourites = favorites.includes(recipe?._id);
   const toggleFavorite = authStore((state) => state.toggleFavorite);
 
   const handleFavorite = async (e, recipeId, userId) => {
@@ -53,7 +53,7 @@ export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
       className="group"
     >
       <Link
-        to={`/recipes/${recipe._id}`}
+        to={`/recipes/${recipe?._id}`}
         className="bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
       >
         <div className="overflow-hidden h-48">

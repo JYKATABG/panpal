@@ -47,7 +47,7 @@ export default function UserDropdown({ user, onLogout }) {
             </li>
             <li>
               <Link
-                to={`/profile/${user._id}/favourites`}
+                to={`/profile/${user?._id}/favourites`}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >

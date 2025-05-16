@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []);
 
   if (isCheckingAuth) {
     return <Loading />;
