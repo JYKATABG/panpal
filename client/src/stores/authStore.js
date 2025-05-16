@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
+import { error } from "console";
 
 const API = import.meta.env.VITE_API_URL;
 const API_URL = `${API}/api/v1/auth`;
@@ -68,7 +69,10 @@ export const authStore = create(
                 try {
                     const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
                     set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
-                } catch {
+                } catch (error) {
+                    if (error.response?.status !== 401) {
+                        console.error("Unexpected auth check error:", error);
+                    }
                     set({ user: null, isAuthenticated: false, isCheckingAuth: false });
                 }
             },
