@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
-import { error } from "console";
 
 const API = import.meta.env.VITE_API_URL;
 const API_URL = `${API}/api/v1/auth`;
@@ -23,7 +22,7 @@ export const authStore = create(
                         name,
                         email,
                         password,
-                    }, { withCredentials: true });
+                    });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -37,10 +36,7 @@ export const authStore = create(
             login: async (email, password) => {
                 set({ isLoading: true, error: null });
                 try {
-                    const response = await axios.post(`${API_URL}/login`, { email, password }, {
-                        withCredentials
-                            : true
-                    });
+                    const response = await axios.post(`${API_URL}/login`, { email, password });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -53,22 +49,32 @@ export const authStore = create(
 
             logout: async () => {
                 set({ error: null });
+
                 try {
-                    await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+                    await axios.post(`${API_URL}/logout`);
                 } catch (error) {
                     set({
                         error: error.response?.data?.message || "Error logging out",
                     });
                     throw error;
                 }
+
+                // Clear state
                 set({ user: null, isAuthenticated: false });
-                localStorage.removeItem("auth-storage")
+
+                // Clear persisted state
+                if (typeof window !== "undefined") {
+                    localStorage.removeItem("auth-storage");
+                }
+
+                // Clear Zustand persistence
+                get()._hasHydrated = false;
             },
 
             checkAuth: async () => {
                 set({ isCheckingAuth: true, error: null });
                 try {
-                    const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
+                    const response = await axios.get(`${API_URL}/check-auth`);
                     set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
                 } catch {
                     set({ user: null, isAuthenticated: false, isCheckingAuth: false });
@@ -93,7 +99,7 @@ export const authStore = create(
             },
         }),
         {
-            name: "auth-storage", // localStorage key
+            name: "auth-storage",
             partialize: (state) => ({
                 user: state.user,
                 isAuthenticated: state.isAuthenticated,

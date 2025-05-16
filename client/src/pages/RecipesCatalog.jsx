@@ -37,8 +37,6 @@ export const RecipesCatalog = () => {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  if (!isCheckingAuth) return <Loading />
-
   const filteredData = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(debouncedSearch)
   );
