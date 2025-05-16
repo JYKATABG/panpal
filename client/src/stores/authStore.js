@@ -55,13 +55,14 @@ export const authStore = create(
                 set({ error: null });
                 try {
                     await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
-                    set({ user: null, isAuthenticated: false, isCheckingAuth: false });
                 } catch (error) {
                     set({
                         error: error.response?.data?.message || "Error logging out",
                     });
                     throw error;
                 }
+                set({ user: null, isAuthenticated: false });
+                localStorage.removeItem("auth-storage")
             },
 
             checkAuth: async () => {
@@ -69,10 +70,7 @@ export const authStore = create(
                 try {
                     const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
                     set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
-                } catch (error) {
-                    if (error.response?.status !== 401) {
-                        console.error("Unexpected auth check error:", error);
-                    }
+                } catch {
                     set({ user: null, isAuthenticated: false, isCheckingAuth: false });
                 }
             },
