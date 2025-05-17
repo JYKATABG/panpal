@@ -12,13 +12,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const app = express();
-const __dirname = path.resolve();
-const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.resolve();
+// const __filename = fileURLToPath(import.meta.url);
 
 app.use(express.json());
 
 app.use(cors({
-  origin: ["https://panpal-client.onrender.com"],
+  origin: ["http://localhost:4173", "https://panpal-client.onrender.com"],
   credentials: true
 }));
 app.use(express.urlencoded({ extended: true }));
@@ -29,11 +29,11 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/recipes", recipeRouter);
 app.use("/api/v1/users", userRouter);
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/{*any}", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+// app.get("/{*any}", (req, res) => {
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
 app.use(errorMiddleware);
 
