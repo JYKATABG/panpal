@@ -46,3 +46,5 @@ export const authorize = async (req, res, next) => {
             .json({ success: false, message: "Server error in authorization" });
     }
 };
+
+export default authorize;
