@@ -1,31 +1,48 @@
-import { JWT_SECRET } from "../config/env.js";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
+import User from "../models/User.js";
+import { JWT_SECRET } from "../config/env.js";
 
-const authorize = async (req, res, next) => {
+export const authorize = async (req, res, next) => {
     try {
-        const token =
-            req.cookies.token ||
-            (req.headers.authorization.startsWith('Bearer')) && req.headers.authorization.split(" ")[1];
-            
-        if (!token) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
+        let token = null;
+
+        if (req.cookies && req.cookies.token) {
+            token = req.cookies.token;
+        } else if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer ")
+        ) {
+            token = req.headers.authorization.split(" ")[1];
         }
 
-        const decoded = jwt.verify(token, JWT_SECRET);        
+        if (!token) {
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized: No token provided" });
+        }
 
-        const user = await User.findById(decoded.userId);
+        let payload;
+        try {
+            payload = jwt.verify(token, JWT_SECRET);
+        } catch (err) {
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized: Invalid token" });
+        }
 
+        const user = await User.findById(payload.userId);
         if (!user) {
-            return res.status(401).json({ success: false, message: "Unauthorized" });
+            return res
+                .status(401)
+                .json({ success: false, message: "Unauthorized: User not found" });
         }
 
         req.user = user;
-
         next();
-    } catch (error) {
-        res.status(401).json({ success: false, message: "Unauthorized", error: error.message });
+    } catch (err) {
+        console.error("Error in authorize middleware:", err);
+        return res
+            .status(500)
+            .json({ success: false, message: "Server error in authorization" });
     }
-}
-
-export default authorize;
+};
