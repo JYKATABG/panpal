@@ -36,10 +36,12 @@ export const regiter = async (req, res, next) => {
             expiresIn: JWT_EXPIRES_IN
         });
 
+        const isProd = NODE_ENV === 'production'
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'None',
+            secure: isProd,
+            sameSite: isProd ? 'None' : 'Lax',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
@@ -50,7 +52,6 @@ export const regiter = async (req, res, next) => {
             success: true,
             message: 'User created successfully',
             data: {
-                token,
                 user: newUsers[0]
             }
         })
@@ -83,10 +84,12 @@ export const login = async (req, res, next) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
+        const isProd = NODE_ENV === 'production'
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'None',
+            secure: isProd,
+            sameSite: isProd ? 'None' : 'Lax',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
@@ -94,7 +97,6 @@ export const login = async (req, res, next) => {
             success: true,
             message: "User logged in successfully",
             data: {
-                token,
                 user
             }
         });
@@ -128,10 +130,12 @@ export const logout = async (req, res, next) => {
             })
         }
 
+        const isProd = NODE_ENV === 'production'
+
         res.clearCookie("token", {
             httpOnly: true,
-            secure: NODE_ENV !== 'production',
-            sameSite: 'strict',
+            secure: isProd,
+            sameSite: isProd ? 'None' : 'Lax',
         });
         res.status(200).json({ success: true, message: "Logged out successfully" });
     } catch (error) {
