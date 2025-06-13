@@ -37,7 +37,7 @@ function App() {
     }
   }, [hasHydrated, checkAuth]);
 
-  if (isCheckingAuth || !hasHydrated) {
+  if (!hasHydrated || isCheckingAuth) {
     return <Loading />;
   }
 

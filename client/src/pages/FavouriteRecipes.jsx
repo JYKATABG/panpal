@@ -10,11 +10,10 @@ import { fetchFavouriteRecipes } from "../api/fetchFavouriteRecipes";
 const API = import.meta.env.VITE_API_URL;
 
 export default function FavouriteRecipes() {
+  const { userId } = useParams();
   const { user, isAuthenticated, isCheckingAuth } = authStore();
   const [favourites, setFavourites] = useState([]);
-
   const navigate = useNavigate();
-  const { userId } = useParams();
 
   useEffect(() => {
     if (!user || !isAuthenticated) return;

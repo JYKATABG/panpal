@@ -24,7 +24,7 @@ export const authStore = create(
                         name,
                         email,
                         password,
-                    });
+                    }, { withCredentials: true });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -38,7 +38,7 @@ export const authStore = create(
             login: async (email, password) => {
                 set({ isLoading: true, error: null });
                 try {
-                    const response = await axios.post(`${API_URL}/login`, { email, password });
+                    const response = await axios.post(`${API_URL}/login`, { email, password }, { withCredentials: true });
                     set({ user: response.data.user, isAuthenticated: true, isLoading: false });
                 } catch (error) {
                     set({
@@ -50,36 +50,25 @@ export const authStore = create(
             },
 
             logout: async () => {
-                set({ error: null });
-
                 try {
                     await axios.post(`${API_URL}/logout`);
-                } catch (error) {
-                    set({
-                        error: error.response?.data?.message || "Error logging out",
-                    });
-                    throw error;
-                }
-
-                // Clear state
+                } catch { }
+                localStorage.removeItem("auth-storage");
                 set({ user: null, isAuthenticated: false });
-
-                // Clear persisted state
-                if (typeof window !== "undefined") {
-                    localStorage.removeItem("auth-storage");
-                }
-
-                // Clear Zustand persistence
-                get()._hasHydrated = false;
             },
 
             checkAuth: async () => {
                 set({ isCheckingAuth: true, error: null });
+
                 try {
-                    const response = await axios.get(`${API_URL}/check-auth`);
-                    set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
-                } catch {
-                    set({ user: null, isAuthenticated: false, isCheckingAuth: false });
+                    const { data } = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
+                    set({ user: data.user, isAuthenticated: true });
+                } catch (err) {
+                    // only log real errors
+                    if (err.response?.status !== 401) console.error(err);
+                    set({ user: null, isAuthenticated: false });
+                } finally {
+                    set({ isCheckingAuth: false });
                 }
             },
 
@@ -87,10 +76,10 @@ export const authStore = create(
                 const { user } = get();
                 if (!user) return;
 
-                const isAlreadyFav = user.favorites.includes(recipeId);
+                const isAlreadyFav = user.favorites.includes(recipeId) || false;
                 const updatedFavorites = isAlreadyFav
                     ? user.favorites.filter((id) => id !== recipeId)
-                    : [...user.favorites, recipeId];
+                    : [...user.favorites || [], recipeId];
 
                 set({ user: { ...user, favorites: updatedFavorites } });
             },

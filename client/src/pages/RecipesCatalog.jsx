@@ -13,21 +13,19 @@ export const RecipesCatalog = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
-  const { isAuthenticated, isCheckingAuth } = authStore();
+  const { isAuthenticated, hasHydrated, isCheckingAuth } = authStore();
   const recipesPerPage = 6;
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get(`${API}/api/v1/recipes`);
-        setRecipes(response.data.data);
-      } catch (error) {
-        console.error("Error fetching recipes:", error);
-      }
-    };
-
-    fetchRecipes();
+    axios.get(`${API}/api/v1/recipes`)
+      .then((r) => {
+        console.log(r.data.data);
+        setRecipes(r.data.data)
+      })
+      .catch(console.error);
   }, []);
+
+  if (!hasHydrated || isCheckingAuth) return <Loading />;
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -38,8 +36,8 @@ export const RecipesCatalog = () => {
   }, [searchTerm]);
 
   const filteredData = recipes.filter((recipe) =>
-    recipe.title.toLowerCase().includes(debouncedSearch)
-  );
+    recipe?.title?.toLowerCase().includes(debouncedSearch)
+  ) || [];
 
   const totalPages = Math.ceil(filteredData.length / recipesPerPage);
 

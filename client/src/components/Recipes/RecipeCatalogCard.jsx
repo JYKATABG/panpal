@@ -10,7 +10,7 @@ const API = import.meta.env.VITE_API_URL;
 export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
   const favorites = authStore((state) => state?.user?.favorites || []);
   const isAddedToFavourites = favorites.includes(recipe?._id);
-  const toggleFavorite = authStore((state) => state.toggleFavorite);
+  const toggleFavorite = authStore((state) => state?.toggleFavorite);
 
   const handleFavorite = async (e, recipeId, userId) => {
     e.stopPropagation();
@@ -77,7 +77,7 @@ export const RecipeCatalogCard = ({ recipe, i, isAuthenticated }) => {
             </span>
             {isAuthenticated && (
               <button
-                onClick={(e) => handleFavorite(e, recipe._id, recipe?.author)}
+                onClick={(e) => handleFavorite(e, recipe?._id, recipe?.author)}
                 className="cursor-pointer hover:text-yellow-500 transition-colors duration-200"
               >
                 <Star
